@@ -1,4 +1,5 @@
-package com.example.User.dto;
+package com.example.AuthServer.dto;
+
 import lombok.*;
 
 @Getter
@@ -7,5 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TokenDto {
-    private String accessToken;
+    private String token;
+
 }

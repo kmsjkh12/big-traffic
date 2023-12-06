@@ -1,4 +1,4 @@
-package com.example.User.dto;
+package com.example.AuthServer.dto;
 
 import lombok.*;
 
@@ -9,4 +9,5 @@ import lombok.*;
 @NoArgsConstructor
 public class LoginDto {
     private String nickname;
+    private String password;
 }
