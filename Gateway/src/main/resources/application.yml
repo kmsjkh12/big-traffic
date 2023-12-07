@@ -1,6 +1,5 @@
 server:
   port: 8760
-
 eureka:
   client:
     register-with-eureka: true
@@ -13,20 +12,20 @@ spring:
     name: apigateway-service
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
       globalcors:
-        corsConfigureations:
+        cors-configurations:
           '[/**]':
-            alowedOrigins: "http://localhost:8333"
+            allowedOrigins: 'http://localhost:3000'
             allow-credentials: true
             allowedHeaders: '*'
             allowedMethods:
+              - PUT
               - GET
               - POST
-              - PUT
               - DELETE
               - OPTIONS
-        default-filters:
-          - DedupeResponseHeader=Access-control-Allow-Orign Access-Control-Allow-Credentials
       routes:
         - id: auth-server
           uri: lb://MY-AUTH-SERVER
@@ -34,6 +33,15 @@ spring:
             - Path=/auth-server/**
           filters:
             - RewritePath=/auth-server/(?<segment>.*), /$\{segment}
+
+        - id: user-server
+          uri: lb://MY-USER-SERVICE
+          predicates:
+            - Path=/user-server/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-server/(?<segment>.*), /$\{segment}
+            - GlobalFilter
 jwt:
   secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWJqLXNwcmluZy1ib290LXNlY3VyaXR5LWp3dC10dXRvcmlhbAo=GzcMAY5
   token-validity-in-seconds: 1000000

@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests.requestMatchers(new AntPathRequestMatcher("/**/login")).permitAll()
-                .anyRequest().authenticated() //위의 세개를 제외하고는 모든 요청은 인증을 거쳐야함
+                .anyRequest().authenticated()
                 )
                 .apply(new JwtSecurityConfig(tokenProvider));
 

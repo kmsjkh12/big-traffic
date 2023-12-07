@@ -8,9 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface AuthRepository extends JpaRepository<Auth, Long> {
-    Auth findByNicknameAndPassword(String nickname, String password);
-    boolean existsByNickname(String nickname);
-
-    Optional<Auth> findByNickname(String nickname);
+    Auth findByUnicknameAndUpw(String nickname, String password);
+    Auth findByUnickname(String nickname);
 
 }

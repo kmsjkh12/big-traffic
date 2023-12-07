@@ -1,7 +1,5 @@
 package com.example.AuthServer.jwt;
 
-import com.example.AuthServer.jwt.JwtFilter;
-import com.example.AuthServer.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
