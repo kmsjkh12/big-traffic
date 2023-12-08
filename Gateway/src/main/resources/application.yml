@@ -42,6 +42,13 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-server/(?<segment>.*), /$\{segment}
             - GlobalFilter
+
+        - id: movie-server
+          uri: lb://MY-MOVIE-SERVICE
+          predicates:
+            - Path=/movie-server/**
+          filters:
+            - RewritePath=/movie-server/(?<segment>.*), /$\{segment}
 jwt:
   secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWJqLXNwcmluZy1ib290LXNlY3VyaXR5LWp3dC10dXRvcmlhbAo=GzcMAY5
   token-validity-in-seconds: 1000000
