@@ -1,5 +1,6 @@
 package com.example.AuthServer.jwt;
 
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,20 @@ public class JwtFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String jwt = resolveToken(httpServletRequest);
+        Cookie[] cookies = ((HttpServletRequest) request).getCookies();
+        String jwt=null;
+        if (cookies != null) {
+            // 쿠키 배열을 순회하면서 원하는 쿠키를 찾습니다.
+            for (Cookie cookie : cookies) {
+                    String authorizationValue = cookie.getValue();
+                    if (authorizationValue.startsWith("Bearer")) {
+                        jwt = authorizationValue.substring(6);
+
+                    }
+            }
+        }
+
+        System.out.print(jwt);
         String requestURI = httpServletRequest.getRequestURI();
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
@@ -38,7 +52,7 @@ public class JwtFilter extends GenericFilterBean {
 
     String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
+       if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
             return bearerToken.substring(7);
         }
         return null;

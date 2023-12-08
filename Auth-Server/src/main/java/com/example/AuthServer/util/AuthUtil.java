@@ -16,11 +16,15 @@ public class AuthUtil {
         this.authRepository = authRepository;
     }
 
-    public Auth getUtils(){
+    public String getUtils(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //Authentication 객체는 사용자의 인증 및 권한 정보
-        String nickname = authentication.getName();
-        return authRepository.findByUnickname(nickname);
+        if (authentication != null && authentication.getName() != null) {
+            return authentication.getName();
+        }
+        else {
+            // 사용자 이름이 없는 경우 또는 authentication이 null인 경우 예외 처리
+            throw new IllegalStateException("Unable to retrieve current username");
+        }
     }
 
     //유저 반환해주는 util!

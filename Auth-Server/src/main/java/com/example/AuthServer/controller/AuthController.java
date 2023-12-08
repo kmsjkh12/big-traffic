@@ -22,7 +22,7 @@ public class AuthController{
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto,  HttpServletResponse response){
         try{
-            return ResponseEntity.ok(authService.login(loginDto,response));
+            return ResponseEntity.ok().body(authService.login(loginDto,response));
         }
         catch(Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

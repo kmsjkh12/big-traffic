@@ -32,7 +32,6 @@ public class AuthPermissionFilter extends AbstractGatewayFilterFactory<AuthPermi
             if (!jwtUtil.tokenValidation(access)) {
                 return jwtUtil.onError(exchange, "AccessToken is not Valid", HttpStatus.UNAUTHORIZED);
             }
-
             /*정상 토큰이 존재하는 경우*/
             request.mutate().header("Auth", "true").build();
             request.mutate().header("Account-Value", jwtUtil.getUserNickname(access)).build();

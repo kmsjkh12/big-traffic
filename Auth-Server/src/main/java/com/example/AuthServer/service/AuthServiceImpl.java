@@ -80,7 +80,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<AuthDto> getLoginStatus(HttpServletRequest request) throws Exception {
-        Auth auth = authUtil.getUtils();
+        String name = authUtil.getUtils();
+
+        Auth auth = authRepository.findByUnickname(name);
         if (!jwtCheck.JwtCheck(request)) {
             throw new Exception("일치하지않는 계정입니다.");
         }
