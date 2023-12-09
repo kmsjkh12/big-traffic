@@ -1,23 +1,18 @@
 package com.example.AuthServer.controller;
 
 import com.example.AuthServer.dto.LoginDto;
-import com.example.AuthServer.entity.Auth;
 import com.example.AuthServer.jwt.TokenProvider;
-import com.example.AuthServer.repository.AuthRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -46,19 +41,20 @@ class AuthControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        String resultLine = result.getResponse().getContentAsString();
+        Cookie[]  cookies = result.getResponse().getCookies();
+        String jwt = null;
+        if (cookies != null) {
+            // 쿠키 배열을 순회하면서 원하는 쿠키를 찾습니다.
+            for (Cookie cookie : cookies) {
+                String authorizationValue = cookie.getValue();
+                if (authorizationValue.startsWith("Bearer")) {
+                    jwt = authorizationValue.substring(6);
 
-        ObjectMapper objectMapper = new ObjectMapper();
+                }
+            }
+        }
 
-        // JSON 파싱
-        JsonNode rootNode = objectMapper.readTree(resultLine);
-
-        // "body" 객체 안의 "token" 값을 추출
-        JsonNode bodyNode = rootNode.path("body");
-        String tokenValue = bodyNode.path("token").asText();
-
-        //then
-        assertEquals(true, tokenProvider.validateToken(tokenValue));
+        assertEquals(true, tokenProvider.validateToken(jwt));
     }
     @Test
     public void 토큰_실패_테스트() throws Exception {
