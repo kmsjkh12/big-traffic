@@ -1,12 +1,9 @@
 package com.example.movie_comment.dto;
 
-import lombok.*;
+
+import lombok.Getter;
 
 @Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class CommentDto {
     private Long umid;
 

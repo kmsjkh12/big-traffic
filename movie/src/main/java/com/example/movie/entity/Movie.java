@@ -10,7 +10,6 @@ import java.sql.Date;
 @Entity
 @Getter
 @NoArgsConstructor
-
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

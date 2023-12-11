@@ -15,13 +15,8 @@ public class KafkaConsumer {
     }
 
 
-    @KafkaListener(topics = "comment", groupId = "group_1")
-    public void createComment(CommentDto commentDto) {
-        Comment comment = Comment.builder()
-                .umid(commentDto.getUmid()).umlike(commentDto.getUmlike()).umcomment(commentDto.getUmcomment())
-                .umcommenttime(commentDto.getUmcommenttime()).uid(commentDto.getUid()).mid(commentDto.getMid())
-                .umscore(commentDto.getUmscore()).umliketime(commentDto.getUmliketime()).build();
-
+    @KafkaListener(topics = "create", groupId = "group_1")
+    public void createComment(Comment comment) {
         commentRepository.save(comment);
     }
 

@@ -1,0 +1,68 @@
+version: '3'
+
+services:
+  service1:
+    image: eureka-server
+    build:
+      context: ./Eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - my-network
+
+  service4:
+    image: gateway-server
+    build:
+      context: ./Gateway
+    ports:
+      - "8500:8500"
+    networks:
+      - my-network
+
+  service3:
+    image: auth-server
+    build:
+      context: ./Auth-Server
+    ports:
+      - "8771:8771"
+    networks:
+      - my-network
+
+  service2:
+    image: movie-server
+    build:
+      context: ./movie
+    ports:
+      - "8764:8764"
+    networks:
+      - my-network
+  service5:
+    image: movie-comment-server
+    build:
+      context: ./movie_comment
+    ports:
+      - "8765:8765"
+    networks:
+      - my-network
+
+  service6:
+    image: movie-theater-server
+    build:
+      context: ./theater
+    ports:
+      - "8777:8777"
+    networks:
+      - my-network
+
+  service7:
+    image: cinema-server
+    build:
+      context: ./cinema
+    ports:
+      - "8772:8772"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge

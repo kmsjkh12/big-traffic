@@ -57,8 +57,6 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
 
         ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(httpStatus);
-        log.error(err);
         return response.setComplete();
     }
     private String resolveToken(ServerHttpRequest request) {

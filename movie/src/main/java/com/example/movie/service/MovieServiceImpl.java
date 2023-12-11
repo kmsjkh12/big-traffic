@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +34,15 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie getDetails(String mid) {
         return movieRepository.findByMid(Long.valueOf(mid));
+    }
+
+    @Override
+    public List<Movie>  getScreenMovie(Map<String, String> requestMap) {
+        return null;
+    }
+
+    @Override
+    public List<Movie>  getComingMovie(Map<String, String> requestMap) {
+        return null;
     }
 }

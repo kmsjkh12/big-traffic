@@ -1,6 +1,7 @@
 package com.example.movie_comment.kafka;
 
 import com.example.movie_comment.dto.CommentDto;
+import com.example.movie_comment.entity.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -14,13 +15,9 @@ public class KafkaProducer {
     }
 
 
-    public CommentDto createSend(String topic, CommentDto orderDto){
+    public Comment createSend(String topic, Comment comment){
         //kafka 메세지 전송
-        kafkaTemplate.send(topic, orderDto);
-        System.out.println("createsend, kafkaproducer");
-        return orderDto;
-    }
-    public void create(){
-        kafkaTemplate.send("comment","say hello");
+        kafkaTemplate.send(topic, comment);
+        return comment;
     }
 }

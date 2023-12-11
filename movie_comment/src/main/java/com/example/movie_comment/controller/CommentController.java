@@ -1,6 +1,7 @@
 package com.example.movie_comment.controller;
 
 import com.example.movie_comment.dto.CommentDto;
+import com.example.movie_comment.entity.Comment;
 import com.example.movie_comment.kafka.KafkaProducer;
 import com.example.movie_comment.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,8 @@ public class CommentController {
 
     @PostMapping("/comment")
     public ResponseEntity< ? > createComment(@ModelAttribute CommentDto commentDto){
-        kafkaProducer.createSend("create", commentDto);
+        Comment comment = Comment.covertCommentDto(commentDto);
+        kafkaProducer.createSend("create", comment);
         return ResponseEntity.status(HttpStatus.CREATED).body(commentDto);
     }
 
