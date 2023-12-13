@@ -8,5 +8,9 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie,Long> {
     List<Movie> findAll();
     Movie findByMid(Long id);
+
+    List<Movie> findByMidIn(List<Long> mid);
+    List<Movie> findByMidNotIn(List<Long> midList);
+
 }
 

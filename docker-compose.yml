@@ -63,6 +63,16 @@ services:
     networks:
       - my-network
 
+  service8:
+    image: info-server
+    build:
+      context: ./movie_info
+    ports:
+      - "8776:8776"
+    networks:
+      - my-network
+
+
 networks:
   my-network:
     driver: bridge

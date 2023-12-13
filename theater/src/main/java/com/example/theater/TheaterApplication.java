@@ -2,6 +2,9 @@ package com.example.theater;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class TheaterApplication {
@@ -10,4 +13,9 @@ public class TheaterApplication {
 		SpringApplication.run(TheaterApplication.class, args);
 	}
 
+	@Bean
+	@LoadBalanced
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 }

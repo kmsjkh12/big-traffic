@@ -1,4 +1,4 @@
-package com.example.cinema;
+package com.example.movie_info;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,10 +9,10 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class CinemaApplication {
+public class MovieInfoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CinemaApplication.class, args);
+		SpringApplication.run(MovieInfoApplication.class, args);
 	}
 
 

@@ -14,11 +14,12 @@ FROM openjdk:17-ea-11-jdk-slim
 
 # 작업 디렉토리 설정 (원하는 경로로 변경 가능)
 WORKDIR /app
+
 # JAR 파일을 컨테이너 내의 /app 디렉토리로 복사
-COPY build/libs/theater-0.0.1-SNAPSHOT.jar /app/theater.jar
+COPY build/libs/movie_info-0.0.1-SNAPSHOT.jar /app/movie_info.jar
 
 # 어플리케이션의 포트 (필요에 따라 수정)
-EXPOSE 8777
+EXPOSE 8776
 
 # 어플리케이션 실행 (JAR 파일 이름에 따라 수정)
-CMD ["java", "-jar", "/app/theater.jar"]
+CMD ["java", "-jar", "/app/movie_info.jar"]

@@ -51,6 +51,13 @@ spring:
           filters:
             - RewritePath=/cinema-server/(?<segment>.*), /$\{segment}
 
+        - id: info-server
+          uri: lb://MY-MOVIE-INFORMATION-SERVER
+          predicates:
+            - Path=/info-server/**
+          filters:
+            - RewritePath=/info-server/(?<segment>.*), /$\{segment}
+
         - id: user-server
           uri: lb://MY-USER-SERVICE
           predicates:

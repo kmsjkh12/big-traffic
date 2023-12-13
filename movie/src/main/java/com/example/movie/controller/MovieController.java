@@ -45,7 +45,10 @@ public class MovieController {
         return ResponseEntity.ok().body(movieService.getComingMovie(requestMap));
     }
 
+    @GetMapping("/playmovies")
+    public ResponseEntity<?> handleRequest(@RequestParam("list") String list) {
+        return ResponseEntity.ok().body(movieService.getPlayMovie(list));
 
-
+    }
 
 }

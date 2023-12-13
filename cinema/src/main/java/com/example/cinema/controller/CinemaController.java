@@ -18,4 +18,7 @@ public class CinemaController {
     public ResponseEntity<?> getCinema(){
         return ResponseEntity.ok().body(cinemaService.getCinema());
     }
+
+
+
 }
