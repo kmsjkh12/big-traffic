@@ -1,5 +1,6 @@
-package com.example.movie_info.dto;
+package com.example.theater.dto;
 
+import jakarta.persistence.Column;
 import lombok.*;
 
 @Getter
@@ -8,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TheaterDto {
+
     private Long tid;
 
     private String tname;

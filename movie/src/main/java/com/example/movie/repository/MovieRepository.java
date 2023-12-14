@@ -10,7 +10,7 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
     Movie findByMid(Long id);
 
     List<Movie> findByMidIn(List<Long> mid);
-    List<Movie> findByMidNotIn(List<Long> midList);
+    List<Movie> findByMidNotIn(List<Long> mid);
 
 }
 

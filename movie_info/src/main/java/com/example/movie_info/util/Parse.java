@@ -10,7 +10,6 @@ public class Parse {
     private static final String url = "lb://GATEWAY-SERVER";
 
     public static String finalListUrl(String target, List<?> list){
-
         String queryString = list.stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(","));
@@ -22,10 +21,13 @@ public class Parse {
         return finalUrl;
     }
 
-    public static List<Long> extractUniqueMids(List<?> infos) {
-        return infos.stream()
-                .map(MovieInfoEntity::getMid)
-                .distinct()
-                .collect(Collectors.toList());
+    public static String finalStringUrl(String target, String ids){
+
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url+target);
+        builder.queryParam("id", ids);
+        String finalUrl = builder.build().toUriString();
+
+        return finalUrl;
     }
 }

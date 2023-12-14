@@ -2,10 +2,12 @@ package com.example.movie_info.controller;
 
 import com.example.movie_info.dto.ClientDto;
 import com.example.movie_info.service.MovieInfoService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,13 +20,14 @@ public class MovieInfoController {
         this.movieInfoService=movieInfoService;
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<?> getInfo(){
-        return ResponseEntity.ok().body(movieInfoService.getMovieInfo());
-    }
-
     @GetMapping("/information")
-    public ResponseEntity<?> getMovieInfo(@ModelAttribute ClientDto clientDto){
+    public ResponseEntity<?> getMovieInfo(@RequestParam(name = "mid", required = false) String mid,
+                                          @RequestParam(name = "tid", required = false) String tid,
+                                          @RequestParam(name = "miday", required = false) String miday) throws JsonProcessingException {
+        System.out.print("clcece  :" + mid);
+        System.out.print("clcece  :" + tid);
+        System.out.print("clcece  :" + miday);
+        ClientDto clientDto = new ClientDto(mid,tid,miday);
         return ResponseEntity.ok().body(movieInfoService.selectMovieInfo(clientDto));
 
     }

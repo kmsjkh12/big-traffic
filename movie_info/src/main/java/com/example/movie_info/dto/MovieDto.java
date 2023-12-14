@@ -13,6 +13,5 @@ public class MovieDto {
 
     private String mtitle;
     private String mrating;
-    private String reserve;
-
+    private boolean reserve;
 }

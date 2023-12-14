@@ -1,11 +1,13 @@
 package com.example.cinema.service;
 
 import com.example.cinema.entity.CinemaEntity;
+import com.example.cinema.parse.Parse;
 import com.example.cinema.repository.CinemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -30,4 +32,15 @@ public class CinemaService {
     }
 
 
+    public List<Long> responseCinema(String list) {
+        List<String> cinemaIds = Arrays.asList(list.split(","));
+
+        List<Long > cids = Parse.convertStringListToLongList(cinemaIds);
+
+        return cinemaRepository.findByCidsIn(cids);
+    }
+
+    public List<Long> responseTid(String id){
+        return cinemaRepository.findByTids(Long.valueOf(id));
+    }
 }

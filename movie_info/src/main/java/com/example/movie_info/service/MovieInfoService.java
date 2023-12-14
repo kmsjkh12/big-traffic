@@ -8,11 +8,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 
 public interface MovieInfoService {
-     List<MovieInfoEntity> getMovieInfo();
 
 
-     ApiResponse selectMovieInfo(ClientDto clientDto);
+     ApiResponse selectMovieInfo(ClientDto clientDto) throws JsonProcessingException;
 
 
-     List<?> getInfo(List<MovieInfoEntity> infos, String url, String type);
 }

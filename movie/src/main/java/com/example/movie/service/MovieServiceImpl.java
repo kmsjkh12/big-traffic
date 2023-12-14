@@ -49,6 +49,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieDto> getPlayMovie(String list) {
+        System.out.print(list);
         List<String> midList = Arrays.asList(list.split(","));
 
         List<Long> mid=Parse.convertStringListToLongList(midList);
