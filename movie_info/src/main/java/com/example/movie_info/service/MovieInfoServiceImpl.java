@@ -1,11 +1,9 @@
 package com.example.movie_info.service;
 
-import com.example.movie_info.dto.ApiResponse;
-import com.example.movie_info.dto.ClientDto;
-import com.example.movie_info.dto.MovieDto;
-import com.example.movie_info.dto.TheaterDto;
+import com.example.movie_info.dto.*;
 import com.example.movie_info.entity.MovieInfoEntity;
 import com.example.movie_info.repository.MovieInfoRepository;
+import com.example.movie_info.util.InfoDtoParse;
 import com.example.movie_info.util.Parse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -16,9 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 
-import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,116 +31,46 @@ public class MovieInfoServiceImpl implements MovieInfoService{
         this.objectMapper=objectMapper;
     }
 
-
-
     @Override
     public ApiResponse selectMovieInfo(ClientDto clientDto) throws JsonProcessingException {
-        // 상영 가능한 모든 영화를 불러온다.
-        List<MovieInfoEntity> movieInfos = movieInfoRepository.getInfo();
-        System.out.println("영화 아이디" + clientDto.getMid());
-        System.out.println("극장 아이디" + clientDto.getTid());
-        System.out.println("날짜" + clientDto.getMiday());
 
         ApiResponse apiResponse = new ApiResponse();
 
-        if ((clientDto.getTid() == null || clientDto.getTid().equals("")) &&
-                (clientDto.getMid() == null || clientDto.getMid().equals("")) &&
-                clientDto.getMiday() == null) {
-            // null 값에 대한 데이터들
-            System.out.print("전체가 널값입니다");
-            List<MovieDto> movies = requestMovie(movieInfoRepository.findDistinctMidayAndCinIn(null, null));
-            List<TheaterDto> theaters = requestTheater(movieInfoRepository.findDistinctMidAndMiday(null, null));
-            List<MovieInfoEntity> infos = movieInfoRepository.findReserverMiday();
-            List<MovieInfoEntity> uniqueInfos = infos.stream()
-                    .collect(Collectors.toMap(MovieInfoEntity::getMiday, Function.identity(), (existing, replacement) -> existing))
-                    .values()
-                    .stream()
-                    .sorted(Comparator.comparing(MovieInfoEntity::getMiday)) // miday로 오름차순 정렬
-                    .collect(Collectors.toList());
+        List<Long> cinemaIds = null;
+        Long mid = null;
 
-            apiResponse.setMovies(movies);
-            apiResponse.setTheaters(theaters);
-            apiResponse.setInfos(uniqueInfos);
-            return apiResponse;
+        if(clientDto.getMid().length() != 0){
+            mid = Long.valueOf(clientDto.getMid());
         }
 
-        if ((clientDto.getTid() == null || clientDto.getTid().equals("")) &&
-                (clientDto.getMid() != null || !clientDto.getMid().equals("")) &&
-                clientDto.getMiday() == null) {
-            System.out.print("영화가 널값입니다");
-            List<MovieDto> movies = requestMovie(movieInfoRepository.findDistinctMidayAndCinIn(null, null));
-            List<TheaterDto> requestTheater =requestTheater(movieInfoRepository.findDistinctMidAndMiday(Long.valueOf(clientDto.getMid()), null));
-            List<MovieInfoEntity> infos = movieInfoRepository.findMovieInfosMid(Long.valueOf(clientDto.getMid()), null);
+        if(clientDto.getTid().length() != 0){
+            cinemaIds = requestCinema(clientDto.getTid());
+        }
 
-            List<MovieInfoEntity> uniqueInfos = infos.stream()
-                    .collect(Collectors.toMap(MovieInfoEntity::getMiday, Function.identity(), (existing, replacement) -> existing))
-                    .values()
-                    .stream()
-                    .sorted(Comparator.comparing(MovieInfoEntity::getMiday)) // miday로 오름차순 정렬
-                    .collect(Collectors.toList());
+        List<Long> midList = movieInfoRepository.findMovieInfoMovie(mid, cinemaIds, clientDto.getMiday());
+        List<Long> cidList =  movieInfoRepository.findMovieInfoCinema(mid, cinemaIds, clientDto.getMiday());
+        List<Date> midayList =  movieInfoRepository.findMovieInfoMiday(mid, cinemaIds, clientDto.getMiday());
+        List<Date> notMidayList =  movieInfoRepository.findMovieInfoMiday(null, null, null);
+        List<ChoiceMovieDto> choice = null;
+        List<MovieDto> movies = requestMovie(midList);
+        List<TheaterDto> theaters = requestTheater(cidList);
+        List<MovieInfoDto> infos = InfoDtoParse.mergeRemoveDuplicates(midayList,notMidayList);
 
-            apiResponse.setMovies(movies);
-            apiResponse.setTheaters(requestTheater);
-            apiResponse.setInfos(uniqueInfos);
+        if(clientDto.getMid().length() != 0 && clientDto.getTid().length() != 0 && clientDto.getMiday() != null){
 
-            return apiResponse;
+            List<MovieInfoEntity> movieInfo = movieInfoRepository.findMovieInfo(mid, cinemaIds, clientDto.getMiday());
+            choice = movieInfo.stream().map(
+                    (v)-> new ChoiceMovieDto(v)
+            ).collect(Collectors.toList());
 
         }
 
-        if ((clientDto.getTid() != null || !clientDto.getTid().equals("")) &&
-                (clientDto.getMid() == null || clientDto.getMid().equals("")) &&
-                clientDto.getMiday() == null){
-            System.out.print("극장이 널값입니다");
-
-            List<Long> cinemaIds = requestCinema(clientDto.getTid());
-            List<MovieDto> requestMovie= requestMovie(movieInfoRepository.findDistinctMidayAndCinIn(
-                    cinemaIds,null));
-            List<TheaterDto> requestTheater = requestTheater(cinemaIds);
-            List<MovieInfoEntity> infos = movieInfoRepository.findMovieInfosMid(null, cinemaIds);
-
-            List<MovieInfoEntity> uniqueInfos = infos.stream()
-                    .collect(Collectors.toMap(MovieInfoEntity::getMiday, Function.identity(), (existing, replacement) -> existing))
-                    .values()
-                    .stream()
-                    .sorted(Comparator.comparing(MovieInfoEntity::getMiday)) // miday로 오름차순 정렬
-                    .collect(Collectors.toList());
-
-            apiResponse.setMovies(requestMovie);
-            apiResponse.setTheaters(requestTheater);
-            apiResponse.setInfos(uniqueInfos);
-
-            return apiResponse;
-        }
-
-
-        if ((clientDto.getTid() == null || clientDto.getTid().equals("")) &&
-                (clientDto.getMid() == null || clientDto.getMid().equals("")) &&
-                clientDto.getMiday() != null) {
-            System.out.print("날짜가 널값입니다");
-
-            List<Long> mid = movieInfoRepository.findDistinctMidayAndCinIn(null,clientDto.getMiday());
-            List<MovieDto> requestMovie = requestMovie(mid);
-
-            List<TheaterDto> requestTheater = requestTheater(movieInfoRepository.findDistinctMidAndMiday(null, clientDto.getMiday()));
-            List<MovieInfoEntity> infos = movieInfoRepository.findReserverMiday();
-            List<MovieInfoEntity> uniqueInfos = infos.stream()
-                    .collect(Collectors.toMap(MovieInfoEntity::getMiday, Function.identity(), (existing, replacement) -> existing))
-                    .values()
-                    .stream()
-                    .sorted(Comparator.comparing(MovieInfoEntity::getMiday)) // miday로 오름차순 정렬
-                    .collect(Collectors.toList());
-
-            apiResponse.setMovies(requestMovie);
-            apiResponse.setTheaters(requestTheater);
-            apiResponse.setInfos(uniqueInfos);
-
-            return apiResponse;
-        }
-
-
-        return null;
+        apiResponse.setMovies(movies);
+        apiResponse.setTheaters(theaters);
+        apiResponse.setInfos(infos);
+        apiResponse.setChoice(choice);
+        return apiResponse;
     }
-
 
     //영화 id를 검색하면 영화를 반환해줌
     public List<MovieDto> requestMovie(List<Long> movie) throws JsonProcessingException {

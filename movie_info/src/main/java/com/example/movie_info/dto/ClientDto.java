@@ -2,7 +2,10 @@ package com.example.movie_info.dto;
 
 import lombok.*;
 
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 @Getter
 @Setter
@@ -13,12 +16,29 @@ public class ClientDto {
     private String tid;
     private Date miday;
 
-    public ClientDto(String mid, String tid, String miday){
-        this.mid =mid;
-        this.tid=tid;
 
+    public boolean checkTheater(){
+        if(this.tid == null){
+            return true;
+        }
+        return false;
+    }
+    public ClientDto(String mid, String tid, String miday) throws ParseException {
+        this.mid=null;
+        this.tid=null;
+        this.miday=null;
+
+        if(mid != null){
+            this.mid= mid;
+        }
+
+        if(tid != null){
+            this.tid= tid;
+        }
         if (miday != "") {
-            this.miday = Date.valueOf(miday);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = format.parse(miday);
+            this.miday =date;
         }
     }
 }

@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long> {
@@ -44,6 +43,63 @@ public interface MovieInfoRepository extends JpaRepository<MovieInfoEntity, Long
             @Param("mid") Long mid,
             @Param("cidList") List<Long> cidList
     );
+
+
+    @Query("SELECT e FROM MovieInfoEntity e WHERE " +
+            "(:mid IS NULL OR e.mid = :mid) AND " +
+            "(e.miday IS NULL OR e.miday = :miday) AND " +
+            "(CAST(e.mistarttime AS java.util.Date) > CURRENT_TIME)")
+    List<MovieInfoEntity> findDistinctMiday(
+            @Param("mid") Long mid,
+            @Param("miday") Date miday
+    );
+
+    @Query("SELECT DISTINCT e.mid FROM MovieInfoEntity e WHERE " +
+            "(:mid IS NULL OR e.mid = :mid) AND " +
+            "(:cidList IS NULL OR e.cid IN :cidList) AND " +
+            "(:miday IS NULL OR e.miday = :miday) AND " +
+            "(CAST(e.mistarttime AS java.util.Date) > CURRENT_TIME)")
+    List<Long> findMovieInfoMovie(
+            @Param("mid") Long mid,
+            @Param("cidList") List<Long> cidList,
+            @Param("miday") Date miday
+    );
+
+
+
+    @Query("SELECT DISTINCT e.cid FROM MovieInfoEntity e WHERE " +
+            "(:mid IS NULL OR e.mid = :mid) AND " +
+            "(:cidList IS NULL OR e.cid IN :cidList) AND " +
+            "(:miday IS NULL OR e.miday = :miday) AND " +
+            "(CAST(e.mistarttime AS java.util.Date) > CURRENT_TIME)")
+    List<Long> findMovieInfoCinema(
+            @Param("mid") Long mid,
+            @Param("cidList") List<Long> cidList,
+            @Param("miday") Date miday
+    );
+
+    @Query("SELECT DISTINCT e.miday FROM MovieInfoEntity e WHERE " +
+            "(:mid IS NULL OR e.mid = :mid) AND " +
+            "(:cidList IS NULL OR e.cid IN :cidList) AND " +
+            "(:miday IS NULL OR e.miday = :miday) AND " +
+            "(CAST(e.mistarttime AS java.util.Date) > CURRENT_TIME)")
+    List<Date> findMovieInfoMiday(
+            @Param("mid") Long mid,
+            @Param("cidList") List<Long> cidList,
+            @Param("miday") Date miday
+    );
+
+    @Query("SELECT e FROM MovieInfoEntity e WHERE " +
+            "(:mid IS NULL OR e.mid = :mid) AND " +
+            "(:cidList IS NULL OR e.cid IN :cidList) AND " +
+            "(:miday IS NULL OR e.miday = :miday) AND " +
+            "(CAST(e.mistarttime AS java.util.Date) > CURRENT_TIME)")
+    List<MovieInfoEntity> findMovieInfo(
+            @Param("mid") Long mid,
+            @Param("cidList") List<Long> cidList,
+            @Param("miday") Date miday
+    );
+
 
 
 

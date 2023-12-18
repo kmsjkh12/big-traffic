@@ -13,5 +13,6 @@ import java.util.List;
 public class ApiResponse {
     private List<MovieDto> movies;
     private List<TheaterDto> theaters;
-    private List<MovieInfoEntity> infos;
+    private List<MovieInfoDto> infos;
+    private List<ChoiceMovieDto> choice;
 }

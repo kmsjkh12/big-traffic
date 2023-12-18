@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 @RestController
 public class MovieInfoController {
 
@@ -23,10 +25,7 @@ public class MovieInfoController {
     @GetMapping("/information")
     public ResponseEntity<?> getMovieInfo(@RequestParam(name = "mid", required = false) String mid,
                                           @RequestParam(name = "tid", required = false) String tid,
-                                          @RequestParam(name = "miday", required = false) String miday) throws JsonProcessingException {
-        System.out.print("clcece  :" + mid);
-        System.out.print("clcece  :" + tid);
-        System.out.print("clcece  :" + miday);
+                                          @RequestParam(name = "miday", required = false) String miday) throws JsonProcessingException, ParseException {
         ClientDto clientDto = new ClientDto(mid,tid,miday);
         return ResponseEntity.ok().body(movieInfoService.selectMovieInfo(clientDto));
 
